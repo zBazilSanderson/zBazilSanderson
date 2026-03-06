@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bazil Sanderson</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+        --bg: #fff;
+        --ink: #1d1d1f;
+        --mid: #6e6e73;
+        --subtle: #f5f5f7;
+        --blue: #0071e3;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        }
+
+        /* ─── Nav ─── */
+        nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+        height: 52px;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 44px;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+        .nav-name { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { color: var(--mid); text-decoration: none; font-size: 13px; transition: color 0.18s; }
+        .nav-links a:hover { color: var(--ink); }
+
+        /* ─── Hero ─── */
+        .hero {
+        min-height: 100vh;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; padding: 0 24px; position: relative; overflow: hidden;
+        }
+        .hero::before {
+        content: '';
+        position: absolute; width: 800px; height: 600px;
+        background: radial-gradient(ellipse, rgba(0,113,227,0.06) 0%, transparent 70%);
+        top: 50%; left: 50%; transform: translate(-50%,-50%);
+        pointer-events: none;
+        }
+        .hero-eyebrow {
+        font-size: 13px; color: var(--blue); margin-bottom: 20px;
+        opacity: 0; animation: fadeUp 0.7s 0.1s ease forwards;
+        }
+        .hero-title {
+        font-size: clamp(52px, 8vw, 100px); font-weight: 300;
+        letter-spacing: -0.045em; line-height: 1.02; margin-bottom: 24px;
+        background: linear-gradient(135deg, #1d1d1f 0%, #1d1d1f 42%, #aaa 56%, #1d1d1f 70%, #1d1d1f 100%);
+        background-size: 250% auto;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        opacity: 0;
+        animation: fadeUp 0.85s 0.22s ease forwards, shimmer 2.4s 0.9s ease forwards;
+        }
+        .hero-sub {
+        font-size: clamp(17px, 2.2vw, 22px); font-weight: 300; color: var(--mid);
+        letter-spacing: -0.01em; max-width: 520px; line-height: 1.5;
+        opacity: 0; animation: fadeUp 0.8s 0.36s ease forwards;
+        }
+        .hero-cta {
+        margin-top: 40px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+        opacity: 0; animation: fadeUp 0.8s 0.5s ease forwards;
+        }
+        .btn { padding: 12px 26px; border-radius: 980px; font-size: 14px; font-weight: 400; text-decoration: none; transition: all 0.18s; display: inline-block; }
+        .btn-primary { background: var(--ink); color: #fff; }
+        .btn-primary:hover { background: #3a3a3c; }
+        .btn-ghost { color: var(--blue); }
+        .btn-ghost:hover { text-decoration: underline; }
+
+        /* ─── Work section ─── */
+        #work { padding: 120px 0 160px; }
+        .work-intro { padding: 0 60px; margin-bottom: 100px; }
+        .section-label {
+        font-size: 11px; font-weight: 500; color: var(--blue);
+        letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+        }
+        .work-intro h2 {
+        font-size: clamp(34px, 4vw, 52px); font-weight: 300;
+        letter-spacing: -0.035em; color: var(--ink);
+        }
+
+        /* ─── Story block ─── */
+        .story {
+        display: flex;
+        align-items: flex-start;
+        padding: 0 60px;
+        margin-bottom: 140px;
+        gap: 80px;
+        }
+        .story.r { flex-direction: row-reverse; }
+
+        .story-visual { flex: 0 0 auto; }
+        .story-visual.wide  { width: 58%; }
+        .story-visual.mid   { width: 50%; }
+        .story-visual.slim  { width: 44%; }
+
+        /* Standard image wrap — overflow hidden clips to radius */
+        .story-img-wrap {
+        overflow: hidden;
+        position: relative;
+        border-radius: 16px;
+        }
+        .r0 .story-img-wrap { border-radius: 16px; }
+        .r1 .story-img-wrap { border-radius: 14px; }
+        .r2 .story-img-wrap { border-radius: 20px; }
+        .r3 .story-img-wrap { border-radius: 14px; }
+        .r4 .story-img-wrap { border-radius: 18px; }
+
+        .story-img {
+        width: 100%; height: auto; display: block; object-fit: contain;
+        transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        /* .story:hover .story-img { transform: scale(1.02); } */
+
+        /* ── Dot nav capsule — sits outside image wrap, below it ── */
+        .dot-nav {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        margin: 12px auto 0;
+        background: rgba(0,0,0,0.06);
+        padding: 8px 14px;
+        border-radius: 980px;
+        }
+        .dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: rgba(0,0,0,0.22);
+        cursor: pointer; transition: all 0.22s;
+        border: none; padding: 0; flex-shrink: 0;
+        }
+        .dot.on { width: 20px; border-radius: 3px; background: var(--ink); }
+        .dot:hover:not(.on) { background: rgba(0,0,0,0.45); }
+
+        /* ── Wave filmstrip ── */
+        .wave-strip-wrap {
+        overflow: hidden;
+        border-radius: 16px;
+        cursor: grab;
+        user-select: none;
+        -webkit-user-select: none;
+        /* fade edges to hint there's more */
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        }
+        .wave-strip-wrap:active { cursor: grabbing; }
+
+        .wave-strip {
+        display: flex;
+        gap: 10px;
+        padding: 4px 20px;
+        will-change: transform;
+        /* transition applied via JS when not dragging */
+        }
+
+        .wave-frame {
+        flex: 0 0 auto;
+        width: 180px;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #e8e8ed;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .wave-frame img {
+        width: 100%;
+        height: 360px;
+        object-fit: cover;
+        display: block;
+        pointer-events: none;
+        border-radius: 20px;
+        }
+
+        /* Text side */
+        .story-body { flex: 1; min-width: 0; padding-top: 8px; }
+        .story-cat {
+        font-size: 11px; font-weight: 500; color: var(--blue);
+        letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 12px;
+        }
+        .story-title {
+        font-weight: 300; letter-spacing: -0.035em; line-height: 1.06;
+        color: var(--ink); margin-bottom: 14px;
+        }
+        .story-desc {
+        font-size: 15px; font-weight: 300; color: var(--mid);
+        line-height: 1.72; letter-spacing: -0.005em; margin-bottom: 28px;
+        }
+        .story-link {
+        font-size: 14px; color: var(--blue);
+        text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+        transition: gap 0.2s;
+        }
+        .story-link:hover { gap: 10px; }
+        .story-link::after { content: '→'; }
+
+        /* ─── About ─── */
+        #about { padding: 120px 60px; background: var(--subtle); }
+        .about-inner {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 100px; align-items: center; max-width: 1100px; margin: 0 auto;
+        }
+        .about-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 20px; display: block; }
+        .about-h { font-size: clamp(32px, 4vw, 50px); font-weight: 300; letter-spacing: -0.03em; margin-bottom: 18px; }
+        .about-text { font-size: 16px; font-weight: 300; color: var(--mid); line-height: 1.75; margin-bottom: 14px; }
+        .skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+        .skill { padding: 6px 15px; background: rgba(0,0,0,0.06); border-radius: 980px; font-size: 12px; color: var(--ink); }
+
+        /* ─── Contact ─── */
+        #contact { background: var(--ink); padding: 120px 44px; text-align: center; }
+        #contact .section-label { color: rgba(255,255,255,0.35); margin-bottom: 12px; }
+        .contact-title { font-size: clamp(36px, 5vw, 66px); font-weight: 300; letter-spacing: -0.04em; color: #fff; margin-bottom: 14px; }
+        .contact-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.42); line-height: 1.6; margin-bottom: 48px; }
+        .contact-email { font-size: clamp(16px, 2.5vw, 34px); font-weight: 300; letter-spacing: -0.02em; color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.22); padding-bottom: 3px; transition: border-color 0.2s; word-break: break-all; }
+        .contact-email:hover { border-color: #fff; }
+        .socials { display: flex; justify-content: center; gap: 36px; margin-top: 68px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap; }
+        .socials a { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .socials a:hover { color: rgba(255,255,255,0.88); }
+
+        footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 44px; display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.2); flex-wrap: wrap; gap: 6px; }
+
+        /* ─── Lightbox ─── */
+        .lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.93); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.28s; padding: 24px; }
+        .lightbox.open { opacity: 1; pointer-events: all; }
+        .lb-img { max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 10px; transform: scale(0.96); transition: transform 0.3s; display: block; }
+        .lightbox.open .lb-img { transform: scale(1); }
+        .lb-close { position: absolute; top: 20px; right: 24px; color: rgba(255,255,255,0.55); font-size: 32px; cursor: pointer; background: none; border: none; line-height: 1; transition: color 0.2s; padding: 8px; }
+        .lb-close:hover { color: #fff; }
+        .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; padding: 0 16px; display: flex; justify-content: space-between; pointer-events: none; }
+        .lb-btn { pointer-events: all; background: rgba(255,255,255,0.12); border: none; color: #fff; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; cursor: pointer; transition: background 0.2s; backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+        .lb-btn:hover { background: rgba(255,255,255,0.24); }
+        .lb-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font-size: 12px; letter-spacing: 0.06em; }
+
+        /* ─── Reveal ─── */
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.85s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.85s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .reveal.up { opacity: 1; transform: none; }
+        .rd1 { transition-delay: 0.12s; } .rd2 { transition-delay: 0.22s; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0% { background-position: 100% center; } 100% { background-position: -100% center; } }
+
+        /* ─── Mobile ─── */
+        @media (max-width: 768px) {
+        nav { padding: 0 20px; }
+        .nav-links { gap: 20px; }
+        #work { padding: 80px 0 100px; }
+        .work-intro { padding: 0 24px; margin-bottom: 60px; }
+        .story { flex-direction: column !important; padding: 0 24px; gap: 24px; margin-bottom: 80px; align-items: stretch; }
+        .story-visual.wide, .story-visual.mid, .story-visual.slim { width: 100%; }
+        .story-body { padding-top: 0; }
+        .wave-frame { width: 150px; }
+        .wave-frame img { height: 300px; }
+        #about { padding: 80px 24px; }
+        .about-inner { grid-template-columns: 1fr; gap: 36px; }
+        .about-img { aspect-ratio: 4/3; }
+        #contact { padding: 80px 24px; }
+        .socials { gap: 20px; }
+        footer { padding: 18px 24px; }
+        .lb-btn { width: 40px; height: 40px; font-size: 18px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-name">Bazil Sanderson</div>
+        <div class="nav-links">
+            <a href="#work">Work</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <p class="hero-eyebrow">Designer &amp; Developer</p>
+        <h1 class="hero-title">Making things<br>people love.</h1>
+        <p class="hero-sub">I craft digital experiences that feel as good as they look — clean, considered, and built to
+            last.</p>
+        <div class="hero-cta">
+            <a href="#work" class="btn btn-primary">See my work</a>
+            <a href="#contact" class="btn btn-ghost">Get in touch</a>
+        </div>
+    </section>
+
+    <section id="work">
+        <div class="work-intro reveal">
+            <div class="section-label">Selected Work</div>
+            <h2>Recent projects.</h2>
+        </div>
+
+        <!-- Suzuki -->
+        <div class="story r r0 reveal" data-story="suzuki">
+            <div class="story-visual wide">
+                <div class="story-img-wrap">
+                    <img class="story-img" src="suz-extranet/pdf.jpg" alt="Suzuki Extranet">
+                </div>
+                <div class="dot-nav" id="dots-suzuki"></div>
+            </div>
+            <div class="story-body">
+                <div class="story-cat">UI Design · Development</div>
+                <div class="story-title" style="font-size:clamp(28px,3vw,42px);">Suzuki Extranet</div>
+                <p class="story-desc">I worked at Suzuki NZ for 3 months over the summer working to redesign their
+                    Extranet systems used by staff and dealers across the nation, bringing a modern design to wokr with
+                    an already exsitsing site. I add new funtionality such as quick search uplaod capablities. </p>
+                <a href="#" class="story-link">View project</a>
+            </div>
+        </div>
+
+        <!-- Wave — filmstrip slider -->
+        <div class="story r1 reveal" data-story="wave">
+            <div class="story-visual mid">
+                <div class="wave-strip-wrap" id="wave-wrap">
+                    <div class="wave-strip" id="wave-strip">
+                        <div class="wave-frame" data-index="0"><img src="wave/Camera.gif" alt="Wave Camera"></div>
+                        <div class="wave-frame" data-index="1"><img src="wave/image2.jpg" alt="Wave 2"></div>
+                        <div class="wave-frame" data-index="2"><img src="wave/image3.jpg" alt="Wave 3"></div>
+                        <div class="wave-frame" data-index="3"><img src="wave/image4.jpg" alt="Wave 4"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="story-body">
+                <div class="story-cat">iOS App Design</div>
+                <div class="story-title" style="font-size:clamp(28px,3vw,44px);">Wave</div>
+                <p class="story-desc">A mobile app designed around fluid interactions and a calm visual language. Drag
+                    through the screens to explore.</p>
+                <a href="#" class="story-link">View project</a>
+            </div>
+        </div>
+
+        <!-- Projects / Site Builds -->
+        <div class="story r r2 reveal" data-story="projects">
+            <div class="story-visual slim">
+                <div class="story-img-wrap">
+                    <img class="story-img" src="https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=900&q=88"
+                        alt="Projects">
+                </div>
+                <div class="dot-nav" id="dots-projects"></div>
+            </div>
+            <div class="story-body">
+                <div class="story-cat">Product Design</div>
+                <div class="story-title" style="font-size:clamp(26px,3vw,40px);">Site Builds</div>
+                <p class="story-desc">A collection of client websites and product pages built with precision and care.
+                </p>
+                <a href="#" class="story-link">View project</a>
+            </div>
+        </div>
+
+    </section>
+
+    <section id="about">
+        <div class="about-inner">
+            <div class="reveal">
+                <img class="about-img" src="profile.jpg" alt="Bazil Sanderson">
+            </div>
+            <div class="reveal rd1">
+                <div class="section-label">About</div>
+                <h2 class="about-h">Obsessed with craft.</h2>
+                <p class="about-text">I'm a designer and developer based in Wellington, NZ. I believe the best work sits
+                    at the intersection of clarity and feeling — where everything unnecessary has been removed, and what
+                    remains just works.</p>
+                <p class="about-text">Currently open to select projects and collaborations.</p>
+                <div class="skills">
+                    <span class="skill">Figma</span>
+                    <span class="skill">React</span>
+                    <span class="skill">Three.js</span>
+                    <span class="skill">GSAP</span>
+                    <span class="skill">CSS</span>
+                    <span class="skill">Node</span>
+                    <span class="skill">After Effects</span>
+                    <span class="skill">Swift UI</span>
+                </div>
+                <div style="margin-top:40px;">
+                    <div class="section-label">Education</div>
+                    <h3 style="font-size:22px; font-weight:400; margin-bottom:6px;">Bachelor of Science</h3>
+                    <p class="about-text" style="margin-bottom:4px;">Victoria University of Wellington (VUW)</p>
+                    <p class="about-text">Major in Artificial Intelligence · Minor in Innovation & Entrepreneurship</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="reveal">
+            <div class="section-label">Contact</div>
+            <h2 class="contact-title">Let's get in touch.</h2>
+            <p class="contact-sub">I'd love to hear what you're building.<br>Let's make something great together.</p>
+            <a class="contact-email" href="mailto:zbazilsanderson@icloud.com">zbazilsanderson@icloud.com</a>
+        </div>
+        <div class="socials reveal rd1">
+            <a href="https://github.com/zBazilSanderson">GitHub</a>
+            <a href="https://www.linkedin.com/in/bazilsanderson">LinkedIn</a>
+            <a href="mailto:zbazilsanderson@icloud.com">Email</a>
+        </div>
+    </section>
+
+    <footer>
+        <span>© 2026 Bazil Sanderson</span>
+        <span>Wellington, NZ</span>
+    </footer>
+
+    <div class="lightbox" id="lightbox">
+        <button class="lb-close" id="lbClose">×</button>
+        <div class="lb-nav">
+            <button class="lb-btn" id="lbPrev">‹</button>
+            <button class="lb-btn" id="lbNext">›</button>
+        </div>
+        <img class="lb-img" id="lbImg" src="" alt="">
+        <div class="lb-counter" id="lbCounter"></div>
+    </div>
+
+    <script>
+        // ─── Galleries ───
+        const GALLERIES = {
+            suzuki: [
+                'suz-extranet/pdf.jpg',
+                'suz-extranet/sales.jpg',
+                'suz-extranet/service.jpg'],
+                
+            wave: [
+                'wave/Camera.gif',
+                'wave/image2.jpg',
+                'wave/image3.jpg',
+                'wave/image4.jpg'],
+
+            projects: [
+                'https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=1600&q=92',
+                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&q=92',
+                'https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?w=1600&q=92'],
+
+            palette: ['https://images.unsplash.com/photo-1545235617-9465d2a55698?w=1600&q=92',
+                'https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?w=1600&q=92'],
+
+            syntax: ['https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1600&q=92',
+                'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1600&q=92',
+                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&q=92'],
+        };
+        const PREVIEW = {
+            suzuki: [
+                'suz-extranet/pdf.jpg', 
+                'suz-extranet/sales.jpg',   
+                'suz-extranet/service.jpg'],
+
+            wave: [
+                'wave/Camera.gif',
+                'wave/image2.jpg', 
+                'wave/image3.jpg', 
+                'wave/image4.jpg'],
+
+            projects: [
+                'https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=900&q=88', 
+                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=88', 
+                'https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?w=900&q=88'],
+
+            palette: [
+                'https://images.unsplash.com/photo-1545235617-9465d2a55698?w=1100&q=88', 
+                'https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?w=1100&q=88'],
+
+            syntax: [
+                'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=950&q=88', 
+                'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=950&q=88', 
+                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=950&q=88'],
+        };
+
+        // Preload everything immediately
+        [...Object.values(GALLERIES), ...Object.values(PREVIEW)].flat().forEach(src => {
+            const img = new Image(); img.src = src;
+        });
+
+        // ─── Standard dot-nav carousels (all stories except wave) ───
+        const storyState = {};
+
+        document.querySelectorAll('.story[data-story]').forEach(storyEl => {
+            const g = storyEl.dataset.story;
+            if (g === 'wave') return; // wave has its own strip logic
+
+            const imgs = GALLERIES[g];
+            const previews = PREVIEW[g];
+            storyState[g] = 0;
+
+            const mainImg = storyEl.querySelector('.story-img');
+            const dotContainer = storyEl.querySelector('.dot-nav');
+            if (!mainImg || !dotContainer) return;
+
+            // Build dots (only if more than one image)
+            if (imgs.length > 1) {
+                imgs.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'dot' + (i === 0 ? ' on' : '');
+                    dot.setAttribute('aria-label', 'Image ' + (i + 1));
+                    dot.addEventListener('click', e => {
+                        e.stopPropagation();
+                        switchImg(g, i, mainImg, dotContainer, previews);
+                    });
+                    dotContainer.appendChild(dot);
+                });
+            }
+
+            // Click image → lightbox
+            mainImg.addEventListener('click', () => openLB(g, storyState[g]));
+            mainImg.style.cursor = 'zoom-in';
+
+            // Swipe on image
+            let tx = 0;
+            mainImg.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+            mainImg.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - tx;
+                if (Math.abs(dx) > 40) {
+                    const next = (storyState[g] + (dx < 0 ? 1 : -1) + imgs.length) % imgs.length;
+                    switchImg(g, next, mainImg, dotContainer, previews);
+                }
+            });
+        });
+
+        function switchImg(g, i, imgEl, dotContainer, previews) {
+            storyState[g] = i;
+            const src = previews[i];
+            const isGif = src.toLowerCase().endsWith('.gif');
+            imgEl.style.transition = 'opacity 0.15s ease';
+            imgEl.style.opacity = '0';
+            if (isGif) {
+                setTimeout(() => { imgEl.src = src; imgEl.style.opacity = '1'; }, 80);
+            } else {
+                const n = new Image();
+                n.src = src;
+                n.onload = () => { imgEl.src = src; imgEl.style.opacity = '1'; };
+            }
+            dotContainer.querySelectorAll('.dot').forEach((d, di) => d.classList.toggle('on', di === i));
+        }
+
+        // ─── Wave filmstrip ───
+        (function () {
+            const wrap = document.getElementById('wave-wrap');
+            const strip = document.getElementById('wave-strip');
+            if (!wrap || !strip) return;
+
+            const FRAME_W = 190; // frame width + gap
+            const GAL = GALLERIES.wave;
+            let offset = 0;
+            let dragStart = null;
+            let dragOffset = 0;
+            let isDragging = false;
+
+            function maxOffset() {
+                return -(GAL.length * FRAME_W - wrap.offsetWidth + 40);
+            }
+            function clamp(v) { return Math.max(maxOffset(), Math.min(0, v)); }
+            function setOffset(v, animate) {
+                offset = clamp(v);
+                strip.style.transition = animate ? 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)' : 'none';
+                strip.style.transform = `translateX(${offset}px)`;
+            }
+
+            // Mouse
+            wrap.addEventListener('mousedown', e => {
+                isDragging = true; dragStart = e.pageX; dragOffset = offset;
+                strip.style.transition = 'none';
+                e.preventDefault();
+            });
+            window.addEventListener('mousemove', e => {
+                if (!isDragging) return;
+                setOffset(dragOffset + (e.pageX - dragStart), false);
+            });
+            window.addEventListener('mouseup', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                strip.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
+            });
+
+            // Touch
+            wrap.addEventListener('touchstart', e => {
+                dragStart = e.touches[0].pageX;
+                dragOffset = offset;
+                strip.style.transition = 'none';
+            }, { passive: true });
+            wrap.addEventListener('touchmove', e => {
+                setOffset(dragOffset + (e.touches[0].pageX - dragStart), false);
+            }, { passive: true });
+            wrap.addEventListener('touchend', () => {
+                strip.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
+            });
+
+            // Click frame → lightbox (only if not a drag)
+            strip.querySelectorAll('.wave-frame').forEach((frame, i) => {
+                frame.style.cursor = 'zoom-in';
+                frame.addEventListener('click', () => {
+                    if (Math.abs(offset - dragOffset) < 6) openLB('wave', i);
+                });
+            });
+        })();
+
+        // ─── Lightbox ───
+        let curG = null, curI = 0;
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImg');
+        const lbCtr = document.getElementById('lbCounter');
+
+        function openLB(g, i) {
+            curG = g; curI = i; renderLB();
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLB() {
+            lb.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function navLB(d) {
+            const l = GALLERIES[curG].length;
+            curI = (curI + d + l) % l;
+            renderLB();
+        }
+        function renderLB() {
+            lbImg.src = GALLERIES[curG][curI];
+            lbCtr.textContent = (curI + 1) + ' / ' + GALLERIES[curG].length;
+            const imgs = GALLERIES[curG];
+            [imgs[(curI + 1) % imgs.length], imgs[(curI - 1 + imgs.length) % imgs.length]]
+                .forEach(src => { const p = new Image(); p.src = src; });
+        }
+
+        document.getElementById('lbClose').addEventListener('click', closeLB);
+        document.getElementById('lbPrev').addEventListener('click', () => navLB(-1));
+        document.getElementById('lbNext').addEventListener('click', () => navLB(1));
+        lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
+        document.addEventListener('keydown', e => {
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLB();
+            if (e.key === 'ArrowLeft') navLB(-1);
+            if (e.key === 'ArrowRight') navLB(1);
+        });
+
+        // Lightbox swipe
+        let lbTx = 0;
+        lb.addEventListener('touchstart', e => { lbTx = e.touches[0].clientX; }, { passive: true });
+        lb.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - lbTx;
+            if (Math.abs(dx) > 40) navLB(dx < 0 ? 1 : -1);
+        });
+
+        // ─── Scroll reveal ───
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('up'); });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+    </script>
+</body>
+
+</html>
