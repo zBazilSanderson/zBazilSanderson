@@ -1,663 +1,1069 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bazil Sanderson</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-        --bg: #fff;
-        --ink: #1d1d1f;
-        --mid: #6e6e73;
-        --subtle: #f5f5f7;
-        --blue: #0071e3;
+            --bg: #ffffff;
+            --ink: #1d1d1f;
+            --mid: #6e6e73;
+            --faint: #aeaeb2;
+            --surface: #f5f5f7;
+            --accent: #0071e3;
+            --radius: 12px;
+            --max-w: 1600px;
         }
 
         html { scroll-behavior: smooth; }
+
         body {
-        background: var(--bg);
-        color: var(--ink);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale; /* Adds crispness on macOS */
+            text-rendering: optimizeLegibility; /* Enables high-end kerning */
+            overflow-x: hidden;
         }
 
-        /* ─── Nav ─── */
-        nav {
-        position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-        height: 52px;
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 0 44px;
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: saturate(180%) blur(20px);
-        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        /* ── Max-width wrapper ── */
+        .wrap {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 48px;
         }
-        .nav-name { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+
+        /* ── Nav ── */
+        #site-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+            height: 52px;
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+        .nav-inner {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 48px;
+            height: 100%;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-name { font-size: 14px; font-weight: 500; letter-spacing: -0.015em; color: var(--ink); }
         .nav-links { display: flex; gap: 32px; }
-        .nav-links a { color: var(--mid); text-decoration: none; font-size: 13px; transition: color 0.18s; }
+        .nav-links a {
+            color: var(--mid); text-decoration: none;
+            font-size: 13px; font-weight: 400;
+            transition: color 0.18s;
+        }
         .nav-links a:hover { color: var(--ink); }
 
-        /* ─── Hero ─── */
+        /* ── Hero ── */
         .hero {
-        min-height: 100vh;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        text-align: center; padding: 0 24px; position: relative; overflow: hidden;
+            min-height: 100vh;
+            display: flex; align-items: center;
         }
-        .hero::before {
-        content: '';
-        position: absolute; width: 800px; height: 600px;
-        background: radial-gradient(ellipse, rgba(0,113,227,0.06) 0%, transparent 70%);
-        top: 50%; left: 50%; transform: translate(-50%,-50%);
-        pointer-events: none;
+        .hero-inner {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 48px;
+            width: 100%;
         }
         .hero-eyebrow {
-        font-size: 13px; color: var(--blue); margin-bottom: 20px;
-        opacity: 0; animation: fadeUp 0.7s 0.1s ease forwards;
+            font-size: 12px; font-weight: 400; color: var(--faint);
+            letter-spacing: 0.06em; text-transform: uppercase;
+            margin-bottom: 28px;
+            opacity: 0; animation: up 0.6s 0.1s ease forwards;
         }
+
         .hero-title {
-        font-size: clamp(52px, 8vw, 100px); font-weight: 300;
-        letter-spacing: -0.045em; line-height: 1.02; margin-bottom: 24px;
-        background: linear-gradient(135deg, #1d1d1f 0%, #1d1d1f 42%, #aaa 56%, #1d1d1f 70%, #1d1d1f 100%);
-        background-size: 250% auto;
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        opacity: 0;
-        animation: fadeUp 0.85s 0.22s ease forwards, shimmer 2.4s 0.9s ease forwards;
+            font-size: clamp(48px, 7.5vw, 104px);
+            font-weight: 300; 
+            letter-spacing: -0.05em; /* Tighter tracking for prestige feel */
+            line-height: 0.98; /* Tighter leading */
+            color: var(--ink); margin-bottom: 24px;
+            opacity: 0; animation: up 0.7s 0.2s ease forwards;
         }
+        
         .hero-sub {
-        font-size: clamp(17px, 2.2vw, 22px); font-weight: 300; color: var(--mid);
-        letter-spacing: -0.01em; max-width: 520px; line-height: 1.5;
-        opacity: 0; animation: fadeUp 0.8s 0.36s ease forwards;
+            font-size: clamp(16px, 1.8vw, 21px); 
+            font-weight: 300;
+            color: var(--mid); 
+            max-width: 460px; 
+            line-height: 1.6; /* Generous breathing room */
+            letter-spacing: -0.015em; /* Slight tracking reduction for readability */
+            opacity: 0; animation: up 0.7s 0.3s ease forwards;
         }
+
         .hero-cta {
-        margin-top: 40px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
-        opacity: 0; animation: fadeUp 0.8s 0.5s ease forwards;
+            margin-top: 44px; display: flex; gap: 10px; flex-wrap: wrap;
+            opacity: 0; animation: up 0.7s 0.4s ease forwards;
         }
-        .btn { padding: 12px 26px; border-radius: 980px; font-size: 14px; font-weight: 400; text-decoration: none; transition: all 0.18s; display: inline-block; }
+        .btn {
+            padding: 10px 22px; border-radius: 980px;
+            font-size: 13px; font-weight: 400; text-decoration: none;
+            display: inline-block; transition: all 0.18s;
+        }
         .btn-primary { background: var(--ink); color: #fff; }
         .btn-primary:hover { background: #3a3a3c; }
-        .btn-ghost { color: var(--blue); }
+        .btn-ghost { color: var(--accent); }
         .btn-ghost:hover { text-decoration: underline; }
 
-        /* ─── Work section ─── */
-        #work { padding: 120px 0 160px; }
-        .work-intro { padding: 0 60px; margin-bottom: 100px; }
-        .section-label {
-        font-size: 11px; font-weight: 500; color: var(--blue);
-        letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+        /* ── Section shared ── */
+        section {
+            padding: 120px 0;
         }
-        .work-intro h2 {
-        font-size: clamp(34px, 4vw, 52px); font-weight: 300;
-        letter-spacing: -0.035em; color: var(--ink);
+        section .wrap { /* sections use .wrap inside */}
+
+        .eyebrow, .project-cat {
+            font-size: 11px; font-weight: 500; 
+            color: var(--mid); /* Softer than the accent color */
+            letter-spacing: 0.12em; /* Wide tracking for elegance */
+            text-transform: uppercase; 
+            margin-bottom: 16px;
+        }
+        
+        .project-title {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 400;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            color: var(--ink);
         }
 
-        /* ─── Story block ─── */
-        .story {
-        display: flex;
-        align-items: flex-start;
-        padding: 0 60px;
-        margin-bottom: 140px;
-        gap: 80px;
+        .project-desc {
+            font-size: 15px; font-weight: 300; color: var(--mid); 
+            line-height: 1.65; margin-bottom: 24px;
+            letter-spacing: -0.01em;
         }
-        .story.r { flex-direction: row-reverse; }
 
-        .story-visual { flex: 0 0 auto; }
-        .story-visual.wide  { width: 58%; }
-        .story-visual.mid   { width: 50%; }
-        .story-visual.slim  { width: 44%; }
-
-        /* Standard image wrap — overflow hidden clips to radius */
-        .story-img-wrap {
-        overflow: hidden;
-        position: relative;
-        border-radius: 16px;
+        .section-heading {
+            font-size: clamp(30px, 3.8vw, 50px);
+            font-weight: 300; letter-spacing: -0.035em;
+            line-height: 1.08; color: var(--ink);
         }
-        .r0 .story-img-wrap { border-radius: 16px; }
-        .r1 .story-img-wrap { border-radius: 14px; }
-        .r2 .story-img-wrap { border-radius: 20px; }
-        .r3 .story-img-wrap { border-radius: 14px; }
-        .r4 .story-img-wrap { border-radius: 18px; }
 
-        .story-img {
-        width: 100%; height: auto; display: block; object-fit: contain;
-        transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+        /* ── Work ── */
+        #work { padding-top: 100px; }
+        .work-intro { margin-bottom: 80px; }
+
+        .project-item {
+            display: grid; grid-template-columns: 3fr 2fr;
+            gap: 80px; align-items: center; padding: 72px 0;
         }
-        /* .story:hover .story-img { transform: scale(1.02); } */
+        .project-item.r { direction: rtl; }
+        .project-item.r > * { direction: ltr; }
 
-        /* ── Dot nav capsule — sits outside image wrap, below it ── */
+        .eyebrow, .project-cat {
+            font-size: 11px; font-weight: 500; 
+            color: var(--mid); /* Softer than the accent color */
+            letter-spacing: 0.12em; /* Wide tracking for elegance */
+            text-transform: uppercase; 
+            margin-bottom: 16px;
+        }
+        
+        .project-title {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 400;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            color: var(--ink);
+        }
+
+        .project-desc {
+            font-size: 15px; font-weight: 300; color: var(--mid); 
+            line-height: 1.65; margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        .project-visual {
+            position: relative;
+        }
+        .project-visual-inner {
+            position: relative;
+            display: block;
+            width: 100%;
+            border-radius: 20px; /* Softer, more modern corners */
+            overflow: hidden;
+            line-height: 0;
+            /* Ultra-soft Apple-like shadow */
+            box-shadow: 0 12px 48px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.02);
+        }
+        .project-visual-inner img.story-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            transition: opacity 0.4s ease;
+        }
+
+        /* ── Arrow buttons (Frosted Glass) ── */
+        .img-prev, .img-next {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: saturate(180%) blur(16px);
+            -webkit-backdrop-filter: saturate(180%) blur(16px);
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: var(--ink);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            padding: 0; line-height: 1;
+        }
+        .img-prev { left: 16px; }
+        .img-next { right: 16px; }
+        .project-visual-inner:hover .img-prev,
+        .project-visual-inner:hover .img-next { opacity: 1; }
+        
+        @media (hover: none) {
+            .img-prev, .img-next { opacity: 0.85 !important; }
+        }
+        .img-prev:hover, .img-next:hover { 
+            background: rgba(255, 255, 255, 0.9); 
+            transform: translateY(-50%) scale(1.05);
+        }
+        .project-visual.single .img-prev,
+        .project-visual.single .img-next { display: none; }
+
+        /* ── Dot nav ── */
         .dot-nav {
-        display: flex;
-        gap: 6px;
-        align-items: center;
-        justify-content: center;
-        width: fit-content;
-        margin: 12px auto 0;
-        background: rgba(0,0,0,0.06);
-        padding: 8px 14px;
-        border-radius: 980px;
+            margin-top: 16px;
+            display: flex; justify-content: center; gap: 8px;
+            align-items: center; min-height: 16px;
         }
         .dot {
-        width: 6px; height: 6px; border-radius: 50%;
-        background: rgba(0,0,0,0.22);
-        cursor: pointer; transition: all 0.22s;
-        border: none; padding: 0; flex-shrink: 0;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: rgba(0,0,0,0.15);
+            border: none; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+            padding: 0; flex-shrink: 0;
         }
-        .dot.on { width: 20px; border-radius: 3px; background: var(--ink); }
-        .dot:hover:not(.on) { background: rgba(0,0,0,0.45); }
+        .dot.on { width: 24px; border-radius: 4px; background: var(--ink); }
+        .dot:hover:not(.on) { background: rgba(0,0,0,0.3); }
 
-        /* ── Wave filmstrip ── */
-        .wave-strip-wrap {
-        overflow: hidden;
-        border-radius: 16px;
-        cursor: grab;
-        user-select: none;
-        -webkit-user-select: none;
-        /* fade edges to hint there's more */
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
-        mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        /* ══════════════════════════════════════════
+           WAVE  Ultra-minimal borderless showcase
+        ══════════════════════════════════════════ */
+        .wave-showcase {
+            position: relative;
+            height: 560px;
+            background: transparent; /* Removed background */
+            overflow: hidden;
         }
-        .wave-strip-wrap:active { cursor: grabbing; }
+
+        .wave-overflow {
+            position: absolute; inset: 0; overflow: hidden; z-index: 1;
+            /* Softer edge fade */
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+        }
 
         .wave-strip {
-        display: flex;
-        gap: 10px;
-        padding: 4px 20px;
-        will-change: transform;
-        /* transition applied via JS when not dragging */
+            display: flex; gap: 24px; padding: 40px 0;
+            will-change: transform; height: 100%;
+            align-items: center; cursor: grab; user-select: none;
         }
+        .wave-strip:active { cursor: grabbing; }
 
+        /* Floating App Frames */
         .wave-frame {
-        flex: 0 0 auto;
-        width: 180px;
-        border-radius: 20px;
-        overflow: hidden;
-        background: #e8e8ed;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            flex: 0 0 auto;
+            width: 220px; height: 450px;
+            border-radius: 36px;
+            overflow: hidden;
+            background: transparent;
+            opacity: 0.3;
+            transform: scale(0.85);
+            /* Apple-style spring animation */
+            transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        box-shadow 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.03);
+            cursor: pointer;
         }
-        .wave-frame img {
-        width: 100%;
-        height: 360px;
-        object-fit: cover;
-        display: block;
-        pointer-events: none;
-        border-radius: 20px;
+        .wave-frame.active {
+            opacity: 1;
+            transform: scale(1);
+            /* Deep, beautiful shadow for the active screen */
+            box-shadow: 0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+        }
+        .wave-frame.neighbour {
+            opacity: 0.6;
+            transform: scale(0.92);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03);
+        }
+        .wave-frame img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+
+        /* Screen name */
+        .wave-screen-label {
+            position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+            font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+            color: #86868b; /* Sleek gray */
+            z-index: 10; pointer-events: none; white-space: nowrap;
+            transition: opacity 0.3s;
         }
 
-        /* Text side */
-        .story-body { flex: 1; min-width: 0; padding-top: 8px; }
-        .story-cat {
-        font-size: 11px; font-weight: 500; color: var(--blue);
-        letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 12px;
+        /* Frosted Glass Prev / Next */
+        .wave-btn {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 20;
+            width: 44px; height: 44px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: var(--ink); cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .story-title {
-        font-weight: 300; letter-spacing: -0.035em; line-height: 1.06;
-        color: var(--ink); margin-bottom: 14px;
-        }
-        .story-desc {
-        font-size: 15px; font-weight: 300; color: var(--mid);
-        line-height: 1.72; letter-spacing: -0.005em; margin-bottom: 28px;
-        }
-        .story-link {
-        font-size: 14px; color: var(--blue);
-        text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
-        transition: gap 0.2s;
-        }
-        .story-link:hover { gap: 10px; }
-        .story-link::after { content: '→'; }
+        .wave-btn:hover { background: rgba(255,255,255,0.9); transform: translateY(-50%) scale(1.05); }
+        .wave-btn.prev { left: 16px; }
+        .wave-btn.next { right: 16px; }
+        .wave-btn[disabled] { opacity: 0; pointer-events: none; transform: translateY(-50%) scale(0.9); }
 
-        /* ─── About ─── */
-        #about { padding: 120px 60px; background: var(--subtle); }
-        .about-inner {
-        display: grid; grid-template-columns: 1fr 1fr;
-        gap: 100px; align-items: center; max-width: 1100px; margin: 0 auto;
+        .wave-dots {
+            position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; align-items: center; z-index: 20;
         }
-        .about-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 20px; display: block; }
-        .about-h { font-size: clamp(32px, 4vw, 50px); font-weight: 300; letter-spacing: -0.03em; margin-bottom: 18px; }
-        .about-text { font-size: 16px; font-weight: 300; color: var(--mid); line-height: 1.75; margin-bottom: 14px; }
-        .skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
-        .skill { padding: 6px 15px; background: rgba(0,0,0,0.06); border-radius: 980px; font-size: 12px; color: var(--ink); }
 
-        /* ─── Contact ─── */
-        #contact { background: var(--ink); padding: 120px 44px; text-align: center; }
-        #contact .section-label { color: rgba(255,255,255,0.35); margin-bottom: 12px; }
-        .contact-title { font-size: clamp(36px, 5vw, 66px); font-weight: 300; letter-spacing: -0.04em; color: #fff; margin-bottom: 14px; }
-        .contact-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.42); line-height: 1.6; margin-bottom: 48px; }
-        .contact-email { font-size: clamp(16px, 2.5vw, 34px); font-weight: 300; letter-spacing: -0.02em; color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.22); padding-bottom: 3px; transition: border-color 0.2s; word-break: break-all; }
-        .contact-email:hover { border-color: #fff; }
-        .socials { display: flex; justify-content: center; gap: 36px; margin-top: 68px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap; }
-        .socials a { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 13px; transition: color 0.2s; }
-        .socials a:hover { color: rgba(255,255,255,0.88); }
+        .wave-dots .dot {
+            background: rgba(0,0,0,0.18);
+            width: 6px; height: 6px;
+        }
+        .wave-dots .dot.on {
+            background: rgba(0,0,0,0.65);
+            width: 20px; border-radius: 3px;
+        }
+        .wave-dots .dot:hover:not(.on) { background: rgba(0,0,0,0.35); }
 
-        footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 44px; display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.2); flex-wrap: wrap; gap: 6px; }
+        /* ── AI ── */
+        #ai { background: var(--surface); }
+        .ai-intro { max-width: 600px; margin-bottom: 64px; }
+        .ai-intro .section-heading { margin-bottom: 20px; }
+        .ai-intro p { font-size: 17px; font-weight: 300; color: var(--mid); line-height: 1.7; }
+        .ai-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 2px; border-radius: var(--radius); overflow: hidden; margin-bottom: 64px;
+        }
+        .ai-cell { background: #fff; padding: 40px; transition: background 0.2s; }
+        .ai-cell:hover { background: #fdfdfd; }
+        .ai-cell-title { font-size: 15px; font-weight: 400; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.015em; }
+        .ai-cell-text { font-size: 14px; font-weight: 300; color: var(--mid); line-height: 1.72; }
+        .ai-quote {
+            font-size: clamp(17px, 2.2vw, 26px); font-weight: 300; color: var(--ink);
+            letter-spacing: -0.025em; line-height: 1.5; max-width: 680px; margin-bottom: 40px;
+        }
+        .ai-quote em { color: var(--mid); font-style: normal; }
+        .ai-tools { display: flex; flex-wrap: wrap; gap: 7px; }
+        .ai-tool, .skill { 
+            padding: 6px 14px; 
+            border-radius: 980px; 
+            background: #ffffff; 
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02); /* Barely-there shadow */
+            font-size: 12px; 
+            font-weight: 400;
+            color: var(--mid); 
+            letter-spacing: -0.01em;
+            transition: all 0.2s ease;
+        }
+        
+        .ai-tool:hover, .skill:hover {
+            border-color: rgba(0,0,0,0.15);
+            color: var(--ink);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        
 
-        /* ─── Lightbox ─── */
-        .lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.93); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.28s; padding: 24px; }
+        /* ── About ── */
+        #about .wrap { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
+        .about-img-col {
+            position: sticky;
+            top: 72px;
+            display: flex;
+            justify-content: center;
+        }
+        .about-img {
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            border-radius: var(--radius);
+            display: block;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04);
+        }
+        .about-text-col { padding-top: 4px; }
+        .about-text-col .eyebrow { margin-bottom: 20px; }
+        .about-heading { font-size: clamp(26px, 3vw, 42px); font-weight: 300; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); margin-bottom: 28px; }
+        .about-body { font-size: 15px; font-weight: 300; color: var(--mid); line-height: 1.78; margin-bottom: 14px; }
+        .skills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 32px; }
+        .skill { padding: 5px 13px; border-radius: 980px; background: rgba(0,0,0,0.055); font-size: 12px; color: var(--mid); }
+
+        /* ── Education ── */
+        #education { background: var(--surface); }
+        .edu-intro { margin-bottom: 64px; }
+        .edu-card {
+            background: #fff; border-radius: var(--radius);
+            display: grid; grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04);
+        }
+        .edu-panel { padding: 52px; }
+        .edu-panel + .edu-panel { border-left: 2px solid var(--surface); }
+        .edu-degree { font-size: clamp(18px, 2.2vw, 28px); font-weight: 300; letter-spacing: -0.025em; color: var(--ink); margin-bottom: 8px; line-height: 1.2; }
+        .edu-school { font-size: 15px; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
+        .edu-location { font-size: 14px; font-weight: 300; color: var(--mid); margin-bottom: 36px; }
+        .edu-meta { display: flex; flex-direction: column; gap: 12px; }
+        .edu-row { display: flex; gap: 14px; align-items: baseline; }
+        .edu-label { font-size: 11px; font-weight: 500; color: var(--faint); letter-spacing: 0.07em; text-transform: uppercase; min-width: 48px; }
+        .edu-value { font-size: 14px; font-weight: 300; color: var(--ink); }
+        .edu-focuses { display: flex; flex-direction: column; gap: 10px; }
+        .edu-focus-item { font-size: 14px; font-weight: 300; color: var(--mid); line-height: 1.6; }
+
+        /* ── Contact ── */
+        #contact .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+        .contact-heading { font-size: clamp(32px, 5vw, 64px); font-weight: 300; letter-spacing: -0.04em; line-height: 1.04; color: var(--ink); margin-bottom: 20px; }
+        .contact-sub { font-size: 15px; font-weight: 300; color: var(--mid); line-height: 1.7; max-width: 360px; }
+        .contact-right { padding-top: 6px; }
+        .contact-email {
+            font-size: clamp(14px, 1.8vw, 20px); font-weight: 300;
+            color: var(--ink); text-decoration: none; letter-spacing: -0.015em;
+            display: inline-block; margin-bottom: 40px;
+            opacity: 0.85; transition: opacity 0.2s; word-break: break-all;
+        }
+        .contact-email:hover { opacity: 1; }
+        .social-list { display: flex; flex-direction: column; }
+        .social-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 17px 0; text-decoration: none;
+            border-top: 1px solid rgba(0,0,0,0.07);
+            transition: opacity 0.2s;
+        }
+        .social-item:last-child { border-bottom: 1px solid rgba(0,0,0,0.07); }
+        .social-item:hover { opacity: 0.5; }
+        .social-name { font-size: 14px; font-weight: 400; color: var(--ink); }
+        .social-arrow { font-size: 16px; color: var(--faint); }
+
+        footer {
+            padding: 20px 0;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        footer .wrap {
+            display: flex; justify-content: space-between;
+            font-size: 12px; color: var(--faint); flex-wrap: wrap; gap: 6px;
+        }
+
+        /* ── Lightbox ── */
+        .lightbox {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.92);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.24s; padding: 24px;
+        }
         .lightbox.open { opacity: 1; pointer-events: all; }
-        .lb-img { max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 10px; transform: scale(0.96); transition: transform 0.3s; display: block; }
+        .lb-img { max-width: 90vw; max-height: 86vh; object-fit: contain; border-radius: 10px; transform: scale(0.97); transition: transform 0.26s cubic-bezier(0.25,0.46,0.45,0.94); display: block; }
         .lightbox.open .lb-img { transform: scale(1); }
-        .lb-close { position: absolute; top: 20px; right: 24px; color: rgba(255,255,255,0.55); font-size: 32px; cursor: pointer; background: none; border: none; line-height: 1; transition: color 0.2s; padding: 8px; }
+        .lb-close { position: absolute; top: 20px; right: 24px; color: rgba(255,255,255,0.4); font-size: 30px; cursor: pointer; background: none; border: none; transition: color 0.18s; padding: 8px; }
         .lb-close:hover { color: #fff; }
-        .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; padding: 0 16px; display: flex; justify-content: space-between; pointer-events: none; }
-        .lb-btn { pointer-events: all; background: rgba(255,255,255,0.12); border: none; color: #fff; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; cursor: pointer; transition: background 0.2s; backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
-        .lb-btn:hover { background: rgba(255,255,255,0.24); }
-        .lb-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font-size: 12px; letter-spacing: 0.06em; }
+        .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; padding: 0 20px; display: flex; justify-content: space-between; pointer-events: none; }
+        .lb-btn { pointer-events: all; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 20px; cursor: pointer; transition: background 0.18s; backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; }
+        .lb-btn:hover { background: rgba(255,255,255,0.22); }
+        .lb-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.3); font-size: 12px; letter-spacing: 0.06em; }
 
-        /* ─── Reveal ─── */
-        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.85s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.85s cubic-bezier(0.25,0.46,0.45,0.94); }
+        /* ── Reveal ── */
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
         .reveal.up { opacity: 1; transform: none; }
-        .rd1 { transition-delay: 0.12s; } .rd2 { transition-delay: 0.22s; }
+        .d1 { transition-delay: 0.1s; }
+        .d2 { transition-delay: 0.18s; }
+        .d3 { transition-delay: 0.26s; }
 
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shimmer { 0% { background-position: 100% center; } 100% { background-position: -100% center; } }
+        @keyframes up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-        /* ─── Mobile ─── */
-        @media (max-width: 768px) {
-        nav { padding: 0 20px; }
-        .nav-links { gap: 20px; }
-        #work { padding: 80px 0 100px; }
-        .work-intro { padding: 0 24px; margin-bottom: 60px; }
-        .story { flex-direction: column !important; padding: 0 24px; gap: 24px; margin-bottom: 80px; align-items: stretch; }
-        .story-visual.wide, .story-visual.mid, .story-visual.slim { width: 100%; }
-        .story-body { padding-top: 0; }
-        .wave-frame { width: 150px; }
-        .wave-frame img { height: 300px; }
-        #about { padding: 80px 24px; }
-        .about-inner { grid-template-columns: 1fr; gap: 36px; }
-        .about-img { aspect-ratio: 4/3; }
-        #contact { padding: 80px 24px; }
-        .socials { gap: 20px; }
-        footer { padding: 18px 24px; }
-        .lb-btn { width: 40px; height: 40px; font-size: 18px; }
+        /* ── Mobile ── */
+        @media (max-width: 900px) {
+            .wrap { padding: 0 28px; }
+            .nav-inner { padding: 0 28px; }
+            .hero-inner { padding: 0 28px; }
+            section { padding: 80px 0; }
+            #work { padding-top: 80px; }
+            /* Slightly narrower gap + less exaggerated image column */
+            .project-item { grid-template-columns: 3fr 2fr; gap: 52px; }
         }
+
+        @media (max-width: 768px) {
+            .wrap { padding: 0 20px; }
+            .nav-inner { padding: 0 20px; }
+            .hero-inner { padding: 0 20px; padding-top: 100px; padding-bottom: 60px; min-height: auto; }
+
+            #site-nav { height: 48px; }
+            .nav-links { gap: 18px; }
+            .nav-links a { font-size: 12px; }
+
+            section { padding: 64px 0; }
+            #work { padding-top: 64px; }
+            .work-intro { margin-bottom: 40px; }
+
+            /* Stack: image full width first, then text below */
+            .project-item {
+                grid-template-columns: 1fr;
+                direction: ltr !important;
+                gap: 20px;
+                padding: 44px 0;
+            }
+            .project-item.r > * { direction: ltr; }
+            .project-item.r .project-info { margin-left: 0; }
+            /* Image takes full column width  looks big and intentional */
+            .project-visual-inner img.story-img { width: 100%; }
+            /* Text gets a comfortable read-width on mobile */
+            .project-info { max-width: 100%; padding-top: 4px; }
+
+            .img-prev, .img-next { opacity: 0.8 !important; width: 32px; height: 32px; font-size: 13px; }
+
+            .ai-grid { grid-template-columns: 1fr; }
+            .ai-cell { padding: 28px; }
+
+            #about .wrap { grid-template-columns: 1fr; gap: 32px; }
+            .about-img-col { position: static; }
+            .about-img { aspect-ratio: 4/3; max-width: 100%; }
+
+            .edu-card { grid-template-columns: 1fr; }
+            .edu-panel { padding: 32px 24px; }
+            .edu-panel + .edu-panel { border-left: none; border-top: 2px solid var(--surface); }
+
+            #contact .wrap { grid-template-columns: 1fr; gap: 40px; }
+
+            /* Wave on mobile */
+            .wave-showcase { height: 480px; background: transparent; }
+            .wave-frame { width: 180px; height: 370px; border-radius: 28px; }
+            .wave-btn { width: 38px; height: 38px; font-size: 16px; }
+            .wave-btn.prev { left: 8px; }
+            .wave-btn.next { right: 8px; }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links { display: none; }
+            .hero-title { font-size: clamp(38px, 10vw, 54px); }
+            /* Even on small phones the image should feel generous */
+            .project-item { padding: 36px 0; gap: 16px; }
+            .wave-showcase { height: 420px; }
+            .wave-frame { width: 148px; height: 302px; border-radius: 24px; }
+        }
+
+        /* ── Dividers between work items ── */
+        .project-divider {
+            height: 1px;
+            background: rgba(0,0,0,0.06);
+        }
+        .project-divider:last-of-type { display: none; }
     </style>
 </head>
-
 <body>
 
-    <nav>
+<nav id="site-nav">
+    <div class="nav-inner">
         <div class="nav-name">Bazil Sanderson</div>
         <div class="nav-links">
             <a href="#work">Work</a>
             <a href="#about">About</a>
+            <a href="#education">Education</a>
             <a href="#contact">Contact</a>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <section class="hero">
-        <p class="hero-eyebrow">Designer &amp; Developer</p>
-        <h1 class="hero-title">Making things<br>people love.</h1>
-        <p class="hero-sub">I craft digital experiences that feel as good as they look — clean, considered, and built to
-            last.</p>
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-inner">
+        <p class="hero-eyebrow">Designer &amp; Developer · Wellington</p>
+        <h1 class="hero-title">Bazil Sanderson</h1>
+        <p class="hero-sub">I design and build digital experiences that feel as good as they look  clean, considered, and built to last.</p>
         <div class="hero-cta">
             <a href="#work" class="btn btn-primary">See my work</a>
-            <a href="#contact" class="btn btn-ghost">Get in touch</a>
+            <a href="#contact" class="btn btn-ghost">Get in touch →</a>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section id="work">
+<!-- Work -->
+<section id="work">
+    <div class="wrap">
         <div class="work-intro reveal">
-            <div class="section-label">Selected Work</div>
-            <h2>Recent projects.</h2>
+            <p class="eyebrow">Selected work</p>
+            <h2 class="section-heading">Recent projects.</h2>
         </div>
 
         <!-- Suzuki -->
-        <div class="story r r0 reveal" data-story="suzuki">
-            <div class="story-visual wide">
-                <div class="story-img-wrap">
+        <div class="project-item r reveal" data-story="suzuki">
+            <div class="project-visual" id="vis-suzuki">
+                <div class="project-visual-inner">
                     <img class="story-img" src="suz-extranet/pdf.jpg" alt="Suzuki Extranet">
+                    <button class="img-prev" data-dir="-1" aria-label="Previous image">‹</button>
+                    <button class="img-next" data-dir="1" aria-label="Next image">›</button>
                 </div>
                 <div class="dot-nav" id="dots-suzuki"></div>
             </div>
-            <div class="story-body">
-                <div class="story-cat">UI Design · Development</div>
-                <div class="story-title" style="font-size:clamp(28px,3vw,42px);">Suzuki Extranet</div>
-                <p class="story-desc">I worked at Suzuki NZ for 3 months over the summer working to redesign their
-                    Extranet systems used by staff and dealers across the nation, bringing a modern design to wokr with
-                    an already exsitsing site. I add new funtionality such as quick search uplaod capablities. </p>
-                <a href="#" class="story-link">View project</a>
+            <div class="project-info">
+                <p class="project-cat">UI Design · Development</p>
+                <h3 class="project-title">Suzuki Extranet</h3>
+                <p class="project-desc">Three months embedded at Suzuki NZ, redesigning the Extranet used by staff and dealers nationwide. A modern interface layered onto an existing platform  quick search, upload capabilities, and a consistent visual language throughout.</p>
+                <a href="#" class="project-link">View project →</a>
             </div>
         </div>
 
-        <!-- Wave — filmstrip slider -->
-        <div class="story r1 reveal" data-story="wave">
-            <div class="story-visual mid">
-                <div class="wave-strip-wrap" id="wave-wrap">
-                    <div class="wave-strip" id="wave-strip">
-                        <div class="wave-frame" data-index="0"><img src="wave/Camera.gif" alt="Wave Camera"></div>
-                        <div class="wave-frame" data-index="1"><img src="wave/image2.jpg" alt="Wave 2"></div>
-                        <div class="wave-frame" data-index="2"><img src="wave/image3.jpg" alt="Wave 3"></div>
-                        <div class="wave-frame" data-index="3"><img src="wave/image4.jpg" alt="Wave 4"></div>
+        <div class="project-divider"></div>
+
+        <!-- Wave -->
+        <div class="project-item reveal" data-story="wave">
+            <div class="project-visual" id="vis-wave">
+                <!-- Wave uses its own bespoke layout -->
+                <div class="wave-showcase">
+                    <div class="wave-overflow">
+                        <div class="wave-strip" id="wave-strip">
+                            <div class="wave-frame active" data-index="0" data-label="Camera"><img src="wave/Camera.gif" alt="Wave Camera"></div>
+                            <div class="wave-frame" data-index="1" data-label="Feed"><img src="wave/Feed1.png" alt="Wave Feed"></div>
+                            <div class="wave-frame" data-index="2" data-label="Post"><img src="wave/post.png" alt="Upload"></div>
+                            <div class="wave-frame" data-index="3" data-label="Search"><img src="wave/search.png" alt="Search"></div>
+                        </div>
                     </div>
+                    <button class="wave-btn prev" id="wave-prev" aria-label="Previous screen">‹</button>
+                    <button class="wave-btn next" id="wave-next" aria-label="Next screen">›</button>
+                    <div class="wave-screen-label" id="wave-label">Camera</div>
+                    <div class="wave-dots" id="wave-dots"></div>
                 </div>
             </div>
-            <div class="story-body">
-                <div class="story-cat">iOS App Design</div>
-                <div class="story-title" style="font-size:clamp(28px,3vw,44px);">Wave</div>
-                <p class="story-desc">A mobile app designed around fluid interactions and a calm visual language. Drag
-                    through the screens to explore.</p>
-                <a href="#" class="story-link">View project</a>
+            <div class="project-info">
+                <p class="project-cat">iOS App Design</p>
+                <h3 class="project-title">Wave</h3>
+                <p class="project-desc">A mobile app built around fluid interactions and a calm visual language. Every screen designed to feel native and effortless  drag the filmstrip to explore, or use the arrows to step through each screen.</p>
+                <a href="#" class="project-link">View project →</a>
             </div>
         </div>
 
-        <!-- Projects / Site Builds -->
-        <div class="story r r2 reveal" data-story="projects">
-            <div class="story-visual slim">
-                <div class="story-img-wrap">
-                    <img class="story-img" src="https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=900&q=88"
-                        alt="Projects">
+        <div class="project-divider"></div>
+
+        <!--MARK:- Site Builds -->
+        <!-- <div class="project-item r reveal" data-story="projects">
+            <div class="project-visual" id="vis-projects">
+                <div class="project-visual-inner">
+                    <img class="story-img" src="https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=900&q=88" alt="Projects">
+                    <button class="img-prev" data-dir="-1" aria-label="Previous image">‹</button>
+                    <button class="img-next" data-dir="1" aria-label="Next image">›</button>
                 </div>
                 <div class="dot-nav" id="dots-projects"></div>
             </div>
-            <div class="story-body">
-                <div class="story-cat">Product Design</div>
-                <div class="story-title" style="font-size:clamp(26px,3vw,40px);">Site Builds</div>
-                <p class="story-desc">A collection of client websites and product pages built with precision and care.
-                </p>
-                <a href="#" class="story-link">View project</a>
+            <div class="project-info">
+                <p class="project-cat">Product Design · Development</p>
+                <h3 class="project-title">Site Builds</h3>
+                <p class="project-desc">A collection of client websites and product pages, each built with close attention to typography, spacing, and motion. Work that earns trust through detail.</p>
+                <a href="#" class="project-link">View project →</a>
+            </div>
+        </div> -->
+    </div>
+</section>
+
+<!-- AI -->
+<section id="ai">
+    <div class="wrap">
+        <div class="ai-intro reveal">
+            <p class="eyebrow">Artificial Intelligence</p>
+            <h2 class="section-heading">Intelligence is the medium.</h2>
+            <p>I'm majoring in AI at Victoria University  drawn to it not just as a field of study, but as a design material. The question I keep returning to: what does it feel like when intelligence disappears into a product and just makes it better?</p>
+        </div>
+        <div class="ai-grid reveal d1">
+            <div class="ai-cell">
+                <p class="ai-cell-title">Academic foundation</p>
+                <p class="ai-cell-text">Studying machine learning theory, neural architectures, probabilistic reasoning, and intelligent systems design  building real intuition for what's happening under the hood, not just how to prompt it.</p>
+            </div>
+            <div class="ai-cell">
+                <p class="ai-cell-title">Building with AI</p>
+                <p class="ai-cell-text">I integrate AI into the things I make  from intelligent search and recommendation systems to generative interfaces. The goal is always the same: make the experience feel effortless.</p>
+            </div>
+            <div class="ai-cell">
+                <p class="ai-cell-title">Design meets intelligence</p>
+                <p class="ai-cell-text">Coming from both design and engineering gives me a specific lens: I care deeply about how AI features feel, not just what they do. The best ones are invisible  you just notice the product got smarter.</p>
+            </div>
+            <div class="ai-cell">
+                <p class="ai-cell-title">What excites me now</p>
+                <p class="ai-cell-text">Multimodal models, agent systems, and the new interface paradigms they unlock. I follow the research closely and think constantly about what these capabilities mean for what we build next.</p>
             </div>
         </div>
+        
+        <div class="ai-quote-container reveal d1">
+            <p class="ai-quote">
+                "The most profound technologies are those that <em>disappear.</em> They weave themselves into the fabric of everyday life until they are indistinguishable from it."
+            </p>
+            <cite class="ai-quote-author">— Mark Weiser</cite>
+        </div>       
+                <!--MARK:- AI Skills -->
 
-    </section>
+         <!-- <div class="ai-tools reveal d3">
+            <span class="ai-tool">PyTorch</span>
+            <span class="ai-tool">TensorFlow</span>
+            <span class="ai-tool">Hugging Face</span>
+            <span class="ai-tool">LangChain</span>
+            <span class="ai-tool">OpenAI API</span>
+            <span class="ai-tool">Anthropic API</span>
+            <span class="ai-tool">scikit-learn</span>
+            <span class="ai-tool">Jupyter</span>
+            <span class="ai-tool">RAG pipelines</span>
+            <span class="ai-tool">Fine-tuning</span>
+            <span class="ai-tool">Prompt engineering</span>
+        </div> -->
+    </div>
+</section>
 
-    <section id="about">
-        <div class="about-inner">
-            <div class="reveal">
-                <img class="about-img" src="profile.jpg" alt="Bazil Sanderson">
+<!-- About -->
+<section id="about">
+    <div class="wrap">
+        <div class="about-img-col reveal">
+            <img class="about-img" src="profile.jpg" alt="Bazil Sanderson">
+        </div>
+        <div class="about-text-col reveal d1">
+            <p class="eyebrow">About</p>
+            <h2 class="about-heading">Obsessed with craft.</h2>
+            <p class="about-body">I'm a designer and developer based in Wellington, NZ. I believe the best work sits at the intersection of clarity and feeling  where everything unnecessary has been removed, and what remains just works.</p>
+            <p class="about-body">I come from both sides: I design with an engineer's eye for systems, and I build with a designer's eye for detail. That dual perspective shapes everything I make.</p>
+            <p class="about-body">Currently open to select projects and collaborations.</p>
+            <div class="skills">
+                <span class="skill">Figma</span><span class="skill">React</span>
+                <span class="skill">Three.js</span><span class="skill">GSAP</span>
+                <span class="skill">CSS</span><span class="skill">Node</span>
+                <span class="skill">After Effects</span><span class="skill">Swift UI</span>
+                <span class="skill">Python</span><span class="skill">TypeScript</span>
             </div>
-            <div class="reveal rd1">
-                <div class="section-label">About</div>
-                <h2 class="about-h">Obsessed with craft.</h2>
-                <p class="about-text">I'm a designer and developer based in Wellington, NZ. I believe the best work sits
-                    at the intersection of clarity and feeling — where everything unnecessary has been removed, and what
-                    remains just works.</p>
-                <p class="about-text">Currently open to select projects and collaborations.</p>
-                <div class="skills">
-                    <span class="skill">Figma</span>
-                    <span class="skill">React</span>
-                    <span class="skill">Three.js</span>
-                    <span class="skill">GSAP</span>
-                    <span class="skill">CSS</span>
-                    <span class="skill">Node</span>
-                    <span class="skill">After Effects</span>
-                    <span class="skill">Swift UI</span>
+        </div>
+    </div>
+</section>
+
+<!-- Education -->
+<section id="education">
+    <div class="wrap">
+        <div class="edu-intro reveal">
+            <p class="eyebrow">Background</p>
+            <h2 class="section-heading">Education</h2>
+        </div>
+        <div class="edu-card reveal d1">
+            <div class="edu-panel">
+                <h3 class="edu-degree">Bachelor of Science</h3>
+                <p class="edu-school">Victoria University of Wellington</p>
+                <p class="edu-location">Wellington, New Zealand</p>
+                <div class="edu-meta">
+                    <div class="edu-row"><span class="edu-label">Major</span><span class="edu-value">Artificial Intelligence</span></div>
+                    <div class="edu-row"><span class="edu-label">Minor</span><span class="edu-value">Innovation &amp; Entrepreneurship</span></div>
                 </div>
-                <div style="margin-top:40px;">
-                    <div class="section-label">Education</div>
-                    <h3 style="font-size:22px; font-weight:400; margin-bottom:6px;">Bachelor of Science</h3>
-                    <p class="about-text" style="margin-bottom:4px;">Victoria University of Wellington (VUW)</p>
-                    <p class="about-text">Major in Artificial Intelligence · Minor in Innovation & Entrepreneurship</p>
+            </div>
+            <div class="edu-panel">
+                <p class="eyebrow" style="margin-bottom:24px;">Focus areas</p>
+                <div class="edu-focuses">
+                    <p class="edu-focus-item">Machine learning &amp; neural networks</p>
+                    <p class="edu-focus-item">Natural language processing</p>
+                    <p class="edu-focus-item">Computer vision</p>
+                    <p class="edu-focus-item">Probabilistic reasoning &amp; inference</p>
+                    <p class="edu-focus-item">Intelligent systems design</p>
+                    <p class="edu-focus-item">Innovation strategy &amp; entrepreneurship</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section id="contact">
+<!-- Contact -->
+<section id="contact">
+    <div class="wrap">
         <div class="reveal">
-            <div class="section-label">Contact</div>
-            <h2 class="contact-title">Let's get in touch.</h2>
-            <p class="contact-sub">I'd love to hear what you're building.<br>Let's make something great together.</p>
-            <a class="contact-email" href="mailto:zbazilsanderson@icloud.com">zbazilsanderson@icloud.com</a>
+            <p class="eyebrow">Contact</p>
+            <h2 class="contact-heading">Let's make<br>something great.</h2>
+            <p class="contact-sub">I'd love to hear what you're building  whether it's a project, a collaboration, or just a conversation.</p>
         </div>
-        <div class="socials reveal rd1">
-            <a href="https://github.com/zBazilSanderson">GitHub</a>
-            <a href="https://www.linkedin.com/in/bazilsanderson">LinkedIn</a>
-            <a href="mailto:zbazilsanderson@icloud.com">Email</a>
+        <div class="contact-right reveal d1">
+            <a class="contact-email" href="mailto:zbazilsanderson@icloud.com"><span>zbazilsanderson@icloud.com</span></a>
+            <div class="social-list">
+                <a class="social-item" href="https://github.com/zBazilSanderson" target="_blank">
+                    <span class="social-name">GitHub</span><span class="social-arrow">↗</span>
+                </a>
+                <a class="social-item" href="https://www.linkedin.com/in/bazilsanderson" target="_blank">
+                    <span class="social-name">LinkedIn</span><span class="social-arrow">↗</span>
+                </a>
+                <a class="social-item" href="mailto:zbazilsanderson@icloud.com">
+                    <span class="social-name">Email</span><span class="social-arrow">↗</span>
+                </a>
+            </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <footer>
+<footer>
+    <div class="wrap">
         <span>© 2026 Bazil Sanderson</span>
         <span>Wellington, NZ</span>
-    </footer>
-
-    <div class="lightbox" id="lightbox">
-        <button class="lb-close" id="lbClose">×</button>
-        <div class="lb-nav">
-            <button class="lb-btn" id="lbPrev">‹</button>
-            <button class="lb-btn" id="lbNext">›</button>
-        </div>
-        <img class="lb-img" id="lbImg" src="" alt="">
-        <div class="lb-counter" id="lbCounter"></div>
     </div>
+</footer>
 
-    <script>
-        // ─── Galleries ───
-        const GALLERIES = {
-            suzuki: [
-                'suz-extranet/pdf.jpg',
-                'suz-extranet/sales.jpg',
-                'suz-extranet/service.jpg'],
-                
-            wave: [
-                'wave/Camera.gif',
-                'wave/image2.jpg',
-                'wave/image3.jpg',
-                'wave/image4.jpg'],
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">×</button>
+    <div class="lb-nav">
+        <button class="lb-btn" id="lbPrev">‹</button>
+        <button class="lb-btn" id="lbNext">›</button>
+    </div>
+    <img class="lb-img" id="lbImg" src="" alt="">
+    <div class="lb-counter" id="lbCounter"></div>
+</div>
 
-            projects: [
-                'https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=1600&q=92',
-                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&q=92',
-                'https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?w=1600&q=92'],
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
+    // ── Galleries ──
+    const GALLERIES = {
+        suzuki:   ['suz-extranet/pdf.jpg','suz-extranet/sales.jpg','suz-extranet/service.jpg'],
+        wave:     ['wave/Camera.gif','wave/Feed1.png','wave/post.png','wave/search.png'],
+        projects: [
+            'https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=1600&q=92',
+            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&q=92',
+            'https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?w=1600&q=92'
+        ],
+    };
+    const PREVIEW = {
+        suzuki:   ['suz-extranet/pdf.jpg','suz-extranet/sales.jpg','suz-extranet/service.jpg'],
+        projects: [
+            'https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=900&q=88',
+            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=88',
+            'https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?w=900&q=88'
+        ],
+    };
+    [...Object.values(GALLERIES),...Object.values(PREVIEW)].flat().forEach(s=>{new Image().src=s;});
 
-            palette: ['https://images.unsplash.com/photo-1545235617-9465d2a55698?w=1600&q=92',
-                'https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?w=1600&q=92'],
+    // ── Standard carousels ──
+    const SS = {};
 
-            syntax: ['https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1600&q=92',
-                'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1600&q=92',
-                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&q=92'],
-        };
-        const PREVIEW = {
-            suzuki: [
-                'suz-extranet/pdf.jpg', 
-                'suz-extranet/sales.jpg',   
-                'suz-extranet/service.jpg'],
+    function initCarousel(g) {
+        const el  = document.querySelector(`.project-item[data-story="${g}"]`);
+        if (!el) return;
+        const vis = el.querySelector('.project-visual');
+        const img = el.querySelector('.story-img');
+        const dc  = el.querySelector('.dot-nav');
+        if (!img || !dc) return;
 
-            wave: [
-                'wave/Camera.gif',
-                'wave/image2.jpg', 
-                'wave/image3.jpg', 
-                'wave/image4.jpg'],
+        SS[g] = 0;
+        const total = GALLERIES[g].length;
 
-            projects: [
-                'https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=900&q=88', 
-                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=88', 
-                'https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?w=900&q=88'],
+        if (total <= 1) {
+            vis.classList.add('single');
+            return;
+        }
 
-            palette: [
-                'https://images.unsplash.com/photo-1545235617-9465d2a55698?w=1100&q=88', 
-                'https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?w=1100&q=88'],
+        for (let i = 0; i < total; i++) {
+            const d = document.createElement('button');
+            d.className = 'dot' + (i===0?' on':'');
+            d.setAttribute('aria-label', `Slide ${i+1}`);
+            d.addEventListener('click', e => { e.stopPropagation(); goTo(g, i); });
+            dc.appendChild(d);
+        }
 
-            syntax: [
-                'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=950&q=88', 
-                'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=950&q=88', 
-                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=950&q=88'],
-        };
-
-        // Preload everything immediately
-        [...Object.values(GALLERIES), ...Object.values(PREVIEW)].flat().forEach(src => {
-            const img = new Image(); img.src = src;
-        });
-
-        // ─── Standard dot-nav carousels (all stories except wave) ───
-        const storyState = {};
-
-        document.querySelectorAll('.story[data-story]').forEach(storyEl => {
-            const g = storyEl.dataset.story;
-            if (g === 'wave') return; // wave has its own strip logic
-
-            const imgs = GALLERIES[g];
-            const previews = PREVIEW[g];
-            storyState[g] = 0;
-
-            const mainImg = storyEl.querySelector('.story-img');
-            const dotContainer = storyEl.querySelector('.dot-nav');
-            if (!mainImg || !dotContainer) return;
-
-            // Build dots (only if more than one image)
-            if (imgs.length > 1) {
-                imgs.forEach((_, i) => {
-                    const dot = document.createElement('button');
-                    dot.className = 'dot' + (i === 0 ? ' on' : '');
-                    dot.setAttribute('aria-label', 'Image ' + (i + 1));
-                    dot.addEventListener('click', e => {
-                        e.stopPropagation();
-                        switchImg(g, i, mainImg, dotContainer, previews);
-                    });
-                    dotContainer.appendChild(dot);
-                });
-            }
-
-            // Click image → lightbox
-            mainImg.addEventListener('click', () => openLB(g, storyState[g]));
-            mainImg.style.cursor = 'zoom-in';
-
-            // Swipe on image
-            let tx = 0;
-            mainImg.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-            mainImg.addEventListener('touchend', e => {
-                const dx = e.changedTouches[0].clientX - tx;
-                if (Math.abs(dx) > 40) {
-                    const next = (storyState[g] + (dx < 0 ? 1 : -1) + imgs.length) % imgs.length;
-                    switchImg(g, next, mainImg, dotContainer, previews);
-                }
+        el.querySelectorAll('.img-prev, .img-next').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+                const dir = parseInt(btn.dataset.dir);
+                goTo(g, (SS[g] + dir + total) % total);
             });
         });
 
-        function switchImg(g, i, imgEl, dotContainer, previews) {
-            storyState[g] = i;
-            const src = previews[i];
-            const isGif = src.toLowerCase().endsWith('.gif');
-            imgEl.style.transition = 'opacity 0.15s ease';
-            imgEl.style.opacity = '0';
-            if (isGif) {
-                setTimeout(() => { imgEl.src = src; imgEl.style.opacity = '1'; }, 80);
-            } else {
-                const n = new Image();
-                n.src = src;
-                n.onload = () => { imgEl.src = src; imgEl.style.opacity = '1'; };
-            }
-            dotContainer.querySelectorAll('.dot').forEach((d, di) => d.classList.toggle('on', di === i));
-        }
+        let tx = 0, ty = 0;
+        img.addEventListener('touchstart', e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+        img.addEventListener('touchend', e=>{
+            const dx=e.changedTouches[0].clientX-tx;
+            const dy=Math.abs(e.changedTouches[0].clientY-ty);
+            if(Math.abs(dx)>40 && Math.abs(dx)>dy) goTo(g,(SS[g]+(dx<0?1:-1)+total)%total);
+        });
+    }
 
-        // ─── Wave filmstrip ───
-        (function () {
-            const wrap = document.getElementById('wave-wrap');
-            const strip = document.getElementById('wave-strip');
-            if (!wrap || !strip) return;
+    function goTo(g, i) {
+        SS[g] = i;
+        const el  = document.querySelector(`.project-item[data-story="${g}"]`);
+        if (!el) return;
+        const img = el.querySelector('.story-img');
+        const dc  = el.querySelector('.dot-nav');
+        img.style.opacity = '0';
+        const n = new Image();
+        n.src = PREVIEW[g][i];
+        n.onload = () => { img.src = PREVIEW[g][i]; img.style.opacity = '1'; };
+        if (n.complete) { img.src = PREVIEW[g][i]; img.style.opacity = '1'; }
+        dc.querySelectorAll('.dot').forEach((d,di) => d.classList.toggle('on', di===i));
+    }
 
-            const FRAME_W = 190; // frame width + gap
-            const GAL = GALLERIES.wave;
-            let offset = 0;
-            let dragStart = null;
-            let dragOffset = 0;
-            let isDragging = false;
+    initCarousel('suzuki');
+    initCarousel('projects');
 
-            function maxOffset() {
-                return -(GAL.length * FRAME_W - wrap.offsetWidth + 40);
-            }
-            function clamp(v) { return Math.max(maxOffset(), Math.min(0, v)); }
-            function setOffset(v, animate) {
-                offset = clamp(v);
-                strip.style.transition = animate ? 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)' : 'none';
-                strip.style.transform = `translateX(${offset}px)`;
-            }
+    // ══════════════════════════════════════════
+    // WAVE  Cinematic phone showcase
+    // ══════════════════════════════════════════
+    (() => {
+        const strip   = document.getElementById('wave-strip');
+        const dotsEl  = document.getElementById('wave-dots');
+        const btnPrev = document.getElementById('wave-prev');
+        const btnNext = document.getElementById('wave-next');
+        const labelEl = document.getElementById('wave-label');
+        if (!strip) return;
 
-            // Mouse
-            wrap.addEventListener('mousedown', e => {
-                isDragging = true; dragStart = e.pageX; dragOffset = offset;
-                strip.style.transition = 'none';
-                e.preventDefault();
-            });
-            window.addEventListener('mousemove', e => {
-                if (!isDragging) return;
-                setOffset(dragOffset + (e.pageX - dragStart), false);
-            });
-            window.addEventListener('mouseup', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                strip.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
-            });
+        const frames = Array.from(strip.querySelectorAll('.wave-frame'));
+        const N = frames.length;
+        let current = 0;
+        const GAP = 20;
 
-            // Touch
-            wrap.addEventListener('touchstart', e => {
-                dragStart = e.touches[0].pageX;
-                dragOffset = offset;
-                strip.style.transition = 'none';
-            }, { passive: true });
-            wrap.addEventListener('touchmove', e => {
-                setOffset(dragOffset + (e.touches[0].pageX - dragStart), false);
-            }, { passive: true });
-            wrap.addEventListener('touchend', () => {
-                strip.style.transition = 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)';
-            });
-
-            // Click frame → lightbox (only if not a drag)
-            strip.querySelectorAll('.wave-frame').forEach((frame, i) => {
-                frame.style.cursor = 'zoom-in';
-                frame.addEventListener('click', () => {
-                    if (Math.abs(offset - dragOffset) < 6) openLB('wave', i);
-                });
-            });
-        })();
-
-        // ─── Lightbox ───
-        let curG = null, curI = 0;
-        const lb = document.getElementById('lightbox');
-        const lbImg = document.getElementById('lbImg');
-        const lbCtr = document.getElementById('lbCounter');
-
-        function openLB(g, i) {
-            curG = g; curI = i; renderLB();
-            lb.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeLB() {
-            lb.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        function navLB(d) {
-            const l = GALLERIES[curG].length;
-            curI = (curI + d + l) % l;
-            renderLB();
-        }
-        function renderLB() {
-            lbImg.src = GALLERIES[curG][curI];
-            lbCtr.textContent = (curI + 1) + ' / ' + GALLERIES[curG].length;
-            const imgs = GALLERIES[curG];
-            [imgs[(curI + 1) % imgs.length], imgs[(curI - 1 + imgs.length) % imgs.length]]
-                .forEach(src => { const p = new Image(); p.src = src; });
-        }
-
-        document.getElementById('lbClose').addEventListener('click', closeLB);
-        document.getElementById('lbPrev').addEventListener('click', () => navLB(-1));
-        document.getElementById('lbNext').addEventListener('click', () => navLB(1));
-        lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
-        document.addEventListener('keydown', e => {
-            if (!lb.classList.contains('open')) return;
-            if (e.key === 'Escape') closeLB();
-            if (e.key === 'ArrowLeft') navLB(-1);
-            if (e.key === 'ArrowRight') navLB(1);
+        // Build dots
+        frames.forEach((_, i) => {
+            const d = document.createElement('button');
+            d.className = 'dot' + (i===0?' on':'');
+            d.setAttribute('aria-label', `Screen ${i+1}`);
+            d.addEventListener('click', () => snapTo(i));
+            dotsEl.appendChild(d);
         });
 
-        // Lightbox swipe
-        let lbTx = 0;
-        lb.addEventListener('touchstart', e => { lbTx = e.touches[0].clientX; }, { passive: true });
-        lb.addEventListener('touchend', e => {
-            const dx = e.changedTouches[0].clientX - lbTx;
-            if (Math.abs(dx) > 40) navLB(dx < 0 ? 1 : -1);
+        function frameWidth() { return frames[0] ? frames[0].offsetWidth : 200; }
+
+        // Offset so frame i is perfectly centred in the overflow container
+        function centreOffset(i) {
+            const cw = strip.parentElement.offsetWidth;
+            const fw = frameWidth();
+            // position of frame i left edge relative to strip origin
+            let left = 0;
+            for (let j = 0; j < i; j++) left += frameWidth() + GAP;
+            // translateX to centre
+            return (cw / 2) - left - (fw / 2);
+        }
+
+        function setTranslate(x, animate) {
+            strip.style.transition = animate
+                // Use a fluid Apple-style spring curve
+                ? 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)'
+                : 'none';
+            strip.style.transform = `translateX(${x}px)`;
+        }
+
+        function updateActive(i) {
+            i = Math.max(0, Math.min(N-1, i));
+            current = i;
+            frames.forEach((f, fi) => {
+                f.classList.toggle('active', fi === i);
+                f.classList.toggle('neighbour', fi === i-1 || fi === i+1);
+            });
+            dotsEl.querySelectorAll('.dot').forEach((d, di) => d.classList.toggle('on', di===i));
+            if (labelEl) labelEl.textContent = frames[i].dataset.label || '';
+            if (btnPrev) btnPrev.toggleAttribute('disabled', i === 0);
+            if (btnNext) btnNext.toggleAttribute('disabled', i === N-1);
+        }
+
+        function snapTo(i, animate=true) {
+            i = Math.max(0, Math.min(N-1, i));
+            setTranslate(centreOffset(i), animate);
+            updateActive(i);
+        }
+
+        btnPrev && btnPrev.addEventListener('click', () => snapTo(current - 1));
+        btnNext && btnNext.addEventListener('click', () => snapTo(current + 1));
+
+        // Click a frame
+        frames.forEach((fr, i) => {
+            let dragDist = 0;
+            fr.addEventListener('mousedown', e => { dragDist = e.pageX; });
+            fr.addEventListener('click', e => {
+                if (Math.abs(e.pageX - dragDist) > 6) return;
+                if (i === current) openLB('wave', i);
+                else snapTo(i);
+            });
         });
 
-        // ─── Scroll reveal ───
-        const obs = new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('up'); });
-        }, { threshold: 0.08 });
-        document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
-    </script>
+        // Drag
+        let dragging = false, startX = 0, startOff = 0, velX = 0, lastX = 0, lastT = 0, rafId = null;
+        const currOffset = () => { const t = new DOMMatrix(getComputedStyle(strip).transform); return t.m41; };
+
+        strip.addEventListener('mousedown', e => {
+            if (rafId) cancelAnimationFrame(rafId);
+            dragging = true; startX = e.pageX; startOff = currOffset();
+            lastX = e.pageX; lastT = Date.now(); velX = 0;
+            strip.style.transition = 'none'; e.preventDefault();
+        });
+        window.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            const now = Date.now(), dt = Math.max(1, now - lastT);
+            velX = (e.pageX - lastX) / dt * 16;
+            lastX = e.pageX; lastT = now;
+            strip.style.transform = `translateX(${startOff + (e.pageX - startX)}px)`;
+        });
+        window.addEventListener('mouseup', () => {
+            if (!dragging) return; dragging = false;
+            const off = currOffset();
+            let best = 0, bestD = Infinity;
+            frames.forEach((_, i) => { const d = Math.abs(centreOffset(i) - off); if (d < bestD) { bestD = d; best = i; } });
+            snapTo(best);
+        });
+
+        strip.addEventListener('touchstart', e => {
+            if (rafId) cancelAnimationFrame(rafId);
+            startX = e.touches[0].pageX; startOff = currOffset();
+            lastX = startX; lastT = Date.now(); velX = 0;
+            strip.style.transition = 'none';
+        }, { passive: true });
+        strip.addEventListener('touchmove', e => {
+            const now = Date.now(), dt = Math.max(1, now - lastT);
+            velX = (e.touches[0].pageX - lastX) / dt * 16;
+            lastX = e.touches[0].pageX; lastT = now;
+            strip.style.transform = `translateX(${startOff + (e.touches[0].pageX - startX)}px)`;
+        }, { passive: true });
+        strip.addEventListener('touchend', () => {
+            const off = currOffset();
+            let best = 0, bestD = Infinity;
+            frames.forEach((_, i) => { const d = Math.abs(centreOffset(i) - off); if (d < bestD) { bestD = d; best = i; } });
+            snapTo(best);
+        });
+
+        // Keyboard
+        strip.parentElement.setAttribute('tabindex', '0');
+        strip.parentElement.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') snapTo(current - 1);
+            if (e.key === 'ArrowRight') snapTo(current + 1);
+        });
+
+        window.addEventListener('resize', () => snapTo(current, false));
+        requestAnimationFrame(() => snapTo(0, false));
+    })();
+
+    // ── Lightbox ──
+    let curG=null,curI=0;
+    const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCtr=document.getElementById('lbCounter');
+    function openLB(g,i){ curG=g;curI=i;renderLB();lb.classList.add('open');document.body.style.overflow='hidden'; }
+    function closeLB(){ lb.classList.remove('open');document.body.style.overflow=''; }
+    function navLB(d){ curI=(curI+d+GALLERIES[curG].length)%GALLERIES[curG].length;renderLB(); }
+    function renderLB(){
+        lbImg.src=GALLERIES[curG][curI];
+        lbCtr.textContent=`${curI+1} / ${GALLERIES[curG].length}`;
+        const imgs=GALLERIES[curG];
+        [imgs[(curI+1)%imgs.length],imgs[(curI-1+imgs.length)%imgs.length]].forEach(s=>{new Image().src=s;});
+    }
+    document.getElementById('lbClose').addEventListener('click',closeLB);
+    document.getElementById('lbPrev').addEventListener('click',()=>navLB(-1));
+    document.getElementById('lbNext').addEventListener('click',()=>navLB(1));
+    lb.addEventListener('click',e=>{ if(e.target===lb) closeLB(); });
+    document.addEventListener('keydown',e=>{
+        if(!lb.classList.contains('open'))return;
+        if(e.key==='Escape')closeLB();
+        if(e.key==='ArrowLeft')navLB(-1);
+        if(e.key==='ArrowRight')navLB(1);
+    });
+    let lbTx=0;
+    lb.addEventListener('touchstart',e=>{lbTx=e.touches[0].clientX;},{passive:true});
+    lb.addEventListener('touchend',e=>{ if(Math.abs(e.changedTouches[0].clientX-lbTx)>40) navLB(e.changedTouches[0].clientX<lbTx?1:-1); });
+
+    // ── Scroll reveal ──
+    const obs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('up'); }),{threshold:0.06});
+    document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+</script>
 </body>
-
 </html>
