@@ -709,8 +709,8 @@
         <div class="wave-project reveal d2" data-story="wave">
 
             <div class="wave-phones">
-                <div class="wave-frame"><img src="wave/Camera.gif" alt="Wave Camera"></div>
-                <div class="wave-frame"><img src="wave/Feed1.png" alt="Wave Feed"></div>
+                <div class="wave-frame"><img src="wave/camera.gif" alt="Wave Camera"></div>
+                <div class="wave-frame"><img src="wave/feed.png" alt="Wave Feed"></div>
                 <div class="wave-frame"><img src="wave/post.png" alt="Wave Post"></div>
                 <div class="wave-frame"><img src="wave/search.png" alt="Wave Search"></div>
             </div>
@@ -864,11 +864,24 @@
 <script>
     // ── Galleries ──
     const GALLERIES = {
-        suzuki:   ['suz-extranet/pdf.jpg','suz-extranet/sales.jpg','suz-extranet/service.jpg'],
-        wave:     ['wave/Camera.gif','wave/Feed1.png','wave/post.png','wave/search.png'],
+        suzuki: [
+            'suz-extranet/pdf.jpg',
+            'suz-extranet/sales.jpg',
+            'suz-extranet/service.jpg'
+        ],
+        wave: [
+            'wave/Camera.gif',
+            'wave/Feed1.png',
+            'wave/post.png',
+            'wave/search.png'
+        ],
     };
     const PREVIEW = {
-        suzuki:   ['suz-extranet/pdf.jpg','suz-extranet/sales.jpg','suz-extranet/service.jpg'],
+        suzuki: [
+            'suz-extranet/pdf.jpg',
+            'suz-extranet/sales.jpg',
+            'suz-extranet/service.jpg'
+        ],
     };
     [...Object.values(GALLERIES)].flat().forEach(s=>{ new Image().src = s; });
 
