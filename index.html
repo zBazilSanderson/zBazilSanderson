@@ -180,33 +180,27 @@
         }
         .work-header .section-title { margin-top: 16px; }
 
-        /* Full-width project  Apple-style feature block */
+        /* Full-width project Apple-style feature block */
         .project-feature {
             margin-bottom: 10rem;
-            border-radius: 20px;
-            overflow: hidden;
-            /* background: var(--surface); */
             position: relative;
+            border-radius: 0;
+            overflow: visible;
+            box-shadow: none;
         }
-        /* Image fills the top portion, text sits below */
+        /* Image container */
         .project-feature-media {
-            width: 100%;
-            aspect-ratio: 16/9;
-            overflow: hidden;
-            position: relative;
-            background: #e8e8ed;
+            box-shadow: none;
+            background: transparent;
         }
         .project-feature-media img.story-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
+            width: 100%;
+            height: auto;
             display: block;
-            transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94),
-                        opacity 0.35s ease;
         }
-   
         /* Frosted glass arrows */
         .img-prev, .img-next {
-            position: absolute; top: 50%; transform: translateY(-50%);
+            position: absolute; top: 35%;
             z-index: 20;
             background: rgba(199, 199, 199, 0.516);
             backdrop-filter: saturate(180%) blur(20px);
@@ -221,15 +215,12 @@
             transition: all 0.25s ease;
             padding: 0;
         }
-        .img-prev { left: 16px; }
-        .img-next { right: 16px; }
+        .img-prev { left: -80px; }
+        .img-next { right: -80px; }
         .project-feature-media:hover .img-prev,
         .project-feature-media:hover .img-next { opacity: 1; }
         @media (hover: none) { .img-prev, .img-next { opacity: 0.85 !important; } }
-        .img-prev:hover, .img-next:hover {
-            background: rgba(255,255,255,0.92);
-            transform: translateY(-50%) scale(1.06);
-        }
+
         .project-visual.single .img-prev,
         .project-visual.single .img-next { display: none; }
 
@@ -284,34 +275,53 @@
         .wave-project {
             border-radius: 20px;
             overflow: hidden;
-            /* background: var(--surface); */
             margin-bottom: 4px;
         }
         .wave-phones {
-            padding: 56px 24px 0;
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            gap: 12px;
+            gap: 20px;
+            padding: 56px 24px 0;
+            overflow: visible;
         }
         .wave-frame {
-            flex: 0 0 auto;
-            width: 190px;
-            height: 390px;
-            border-radius: 36px;
-            overflow: hidden;
-            background: #000;
-            box-shadow:
-                0 28px 60px rgba(0,0,0,0.18),
-                0 10px 24px rgba(0,0,0,0.10);
-            outline: 2px solid rgba(255,255,255,0.06);
-            transition: transform 0.5s cubic-bezier(0.2,0.8,0.2,1),
-                        box-shadow 0.5s ease;
+            position: relative;
+            width: clamp(110px, 20vw, 216px);
+            aspect-ratio: 216 / 436;
             cursor: default;
+            flex: 0 0 auto;
+            display: block;
         }
-        .wave-frame img {
-            width: 100%; height: 100%;
-            object-fit: cover; display: block;
+        .wave-frame-hardware {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: url("wave/phone-frame.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        .wave-frame-screen {
+            position: absolute;
+            /* Use only percentage-based insets so the screen always fits perfectly. */
+            top: 2.3%;
+            left: 5.5%;
+            width: 89%;
+            height: 96%;
+            border-radius: 12%/5.5%;
+            overflow: hidden;
+            z-index: 1;
+            display: block;
+        }
+        .wave-frame-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
             pointer-events: none;
         }
         .wave-project-body {
@@ -632,12 +642,15 @@
             .edu-panel + .edu-panel { border-left: none; border-top: 1px solid var(--line); }
             .contact-layout { grid-template-columns: 1fr; gap: 48px; }
             .wave-phones { gap: 8px; padding: 36px 16px 0; }
-            .wave-frame { width: 22vw; height: 45vw; border-radius: 5vw; }
-            .ai-cell-hero { padding: 40px; }
+            .wave-frame {
+                width: clamp(90px, 23vw, 180px);
+            }
         }
         @media (max-width: 480px) {
             .nav-links { display: none; }
-            .wave-frame { width: 21vw; height: 43vw; border-radius: 4.5vw; }
+            .wave-frame {
+                width: clamp(60px, 32vw, 120px);
+            }
         }
     </style>
 </head>
@@ -692,7 +705,7 @@
         <!-- Suzuki  full-width feature card -->
         <div class="project-feature reveal d1" data-story="suzuki">
             <div class="project-visual project-feature-media" id="vis-suzuki">
-                <img class="story-img" src="suz-extranet/pdf.jpg" alt="Suzuki Extranet">
+                <img class="story-img" src="suz-extranet/pdf.png" alt="Suzuki Extranet">
                 <button class="img-prev" data-dir="-1" aria-label="Previous image">‹</button>
                 <button class="img-next" data-dir="1" aria-label="Next image">›</button>
             </div>
@@ -700,7 +713,7 @@
             <div class="project-feature-body">
                 <span class="project-cat">UI Design · Development</span>
                 <h3 class="project-title">Suzuki Extranet</h3>
-                <p class="project-desc">Three months embedded at Suzuki NZ, redesigning the Extranet used by staff and dealers nationwide. A modern interface layered onto an existing platform  quick search, upload capabilities, and a consistent visual language throughout.</p>
+                <p class="project-desc">Over the summer I spent three months working at Suzuki NZ, where I worked to redesign their Extranet used by staff and dealers nationwide. A modern interface layered onto an existing platform  quick search, upload capabilities, and a consistent visual language throughout.</p>
                 <a href="#" class="project-link">View project →</a>
             </div>
         </div>
@@ -709,10 +722,22 @@
         <div class="wave-project reveal d2" data-story="wave">
 
             <div class="wave-phones">
-                <div class="wave-frame"><img src="wave/camera.gif" alt="Wave Camera"></div>
-                <div class="wave-frame"><img src="wave/feed.png" alt="Wave Feed"></div>
-                <div class="wave-frame"><img src="wave/post.png" alt="Wave Post"></div>
-                <div class="wave-frame"><img src="wave/search.png" alt="Wave Search"></div>
+                <div class="wave-frame">
+                    <div class="wave-frame-hardware"></div>
+                    <div class="wave-frame-screen"><img src="wave/camera.png" alt="Wave Camera"></div>
+                </div>
+                <div class="wave-frame">
+                    <div class="wave-frame-hardware"></div>
+                    <div class="wave-frame-screen"><img src="wave/feed.png" alt="Wave Feed"></div>
+                </div>
+                <div class="wave-frame">
+                    <div class="wave-frame-hardware"></div>
+                    <div class="wave-frame-screen"><img src="wave/post.png" alt="Wave Post"></div>
+                </div>
+                <div class="wave-frame">
+                    <div class="wave-frame-hardware"></div>
+                    <div class="wave-frame-screen"><img src="wave/search.png" alt="Wave Search"></div>
+                </div>
             </div>
 
             <div class="wave-project-body">
@@ -758,6 +783,7 @@
     <div class="wrap">
         <div class="about-layout">
             <div class="about-img-col reveal">
+                <img class="about-img" src="profile.jpg" alt="Bazil Sanderson">
                 <img class="about-img" src="profile.jpg" alt="Bazil Sanderson">
             </div>
             <div class="about-text-col reveal d2">
@@ -834,7 +860,7 @@
                     <a class="social-item" href="https://www.linkedin.com/in/bazilsanderson" target="_blank">
                         <span class="social-name">LinkedIn</span><span class="social-arrow">↗</span>
                     </a>
-                    <a class="social-item" href="mailto:zbazilsanderson@icloud.com">
+                    <a class="social-item" href="/cdn-cgi/l/email-protection#add7cfccd7c4c1deccc3c9c8dfdec2c3edc4cec1c2d8c983cec2c0">
                         <span class="social-name">Email</span><span class="social-arrow">↗</span>
                     </a>
                 </div>
@@ -861,13 +887,14 @@
     <div class="lb-counter" id="lbCounter"></div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ── Galleries ──
     const GALLERIES = {
         suzuki: [
-            'suz-extranet/pdf.jpg',
-            'suz-extranet/sales.jpg',
-            'suz-extranet/service.jpg'
+            'suz-extranet/pdf.png',
+            'suz-extranet/sales.png',
+            'suz-extranet/service.png',
+            'suz-extranet/search.png'
         ],
         wave: [
             'wave/camera.gif',
@@ -878,9 +905,10 @@
     };
     const PREVIEW = {
         suzuki: [
-            'suz-extranet/pdf.jpg',
-            'suz-extranet/sales.jpg',
-            'suz-extranet/service.jpg'
+            'suz-extranet/pdf.png',
+            'suz-extranet/sales.png',
+            'suz-extranet/service.png',
+            'suz-extranet/search.png'
         ],
     };
     [...Object.values(GALLERIES)].flat().forEach(s=>{ new Image().src = s; });
